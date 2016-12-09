@@ -27,7 +27,7 @@ public class MatrixMultiplier {
 		for (i = 0; i < a.length; i++) {
 			rms[i] = new RowMultiplier(a[i], b);
 			threads[i] = new Thread(rms[i]);
-			threads[i].run();
+			threads[i].start();
 		}
 
 		for (i = 0; i < a.length; i++) {
