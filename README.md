@@ -8,7 +8,7 @@ This is a collection of solutions of exercises taken from the exams of the *[Mid
 
 ### pthread
 
-Contains multithreaded C code that uses the native *pthread+ library*.
+Contains multithreaded C code that uses the native *pthread library*.
 
 How to build: `make`
 
