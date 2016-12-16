@@ -5,55 +5,66 @@ public class Buffer {
 	private int[] data;
 	private boolean[] occupied; // whather the cell is empty or full
 	private int[] readers; // how many readers waiting for the item
-	
+	private Object[] locks; // objects to lock the single elements
+
 	public Buffer() {
 		data = new int[N];
 		readers = new int[N];
 		occupied = new boolean[N];
-	}
-	
-	public synchronized int read(int pos) {
-		readers[pos]++;
-		while(!occupied[pos]) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		locks = new Object[N];
+		for (int i = 0; i < locks.length; i++) {
+			locks[i] = new Object();
 		}
-		readers[pos]--;
-		notifyAll();
-		return data[pos];
 	}
-	
-	public synchronized void write(int value, int pos) {
-		while(occupied[pos]) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+	public int read(int pos) {
+		synchronized (locks[pos]) {
+			readers[pos]++;
+			while (!occupied[pos]) {
+				try {
+					locks[pos].wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			readers[pos]--;
+			locks[pos].notifyAll();
+			return data[pos];
 		}
-		data[pos] = value;
-		occupied[pos] = true;
-		notifyAll();
 	}
-	
-	public synchronized int get(int pos) {
-		// wait for all readers to complete before "getting"
-		while(!occupied[pos] || readers[pos] > 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+	public void write(int value, int pos) {
+		synchronized (locks[pos]) {
+			while (occupied[pos]) {
+				try {
+					locks[pos].wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			data[pos] = value;
+			occupied[pos] = true;
+			locks[pos].notifyAll();
 		}
-		occupied[pos] = false;
-		notifyAll();
-		return data[pos];
 	}
-	
+
+	public int get(int pos) {
+		synchronized (locks[pos]) {
+			// wait for all readers to complete before "getting"
+			while (!occupied[pos] || readers[pos] > 0) {
+				try {
+					locks[pos].wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			occupied[pos] = false;
+			locks[pos].notifyAll();
+			return data[pos];
+		}
+	}
+
 }
