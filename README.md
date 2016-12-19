@@ -20,4 +20,4 @@ How to build: import into [Eclipse](https://eclipse.org/) and run as Java applic
 
 ## License
 
-[GNU GPL v3](LICENSE.txt).
+[GNU GPL v3](COPYING).
