@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     double avgM;
 
     // Fill in the matrix
-    #pragma parallel for
+    #pragma omp parallel for
     for(i=0; i<ROWS*LINES; i++) {
         M[i/LINES][i%LINES] = (i/LINES) + (i%LINES);
     }
@@ -28,16 +28,14 @@ int main(int argc, char *argv[]) {
         cout << endl;
     }
 
-    #pragma parallel for reduction(+: sum)
-    {
-        for(i=0; i<ROWS*LINES; i++) {
-            sum += M[i/LINES][i%LINES];
-        }
+    #pragma omp parallel for reduction(+: sum)
+    for(i=0; i<ROWS*LINES; i++) {
+        sum += M[i/LINES][i%LINES];
     }
 
     avgM = sum / (ROWS*LINES);
 
-    #pragma parallel for
+    #pragma omp parallel for
     for(i=0; i<ROWS*LINES; i++) {
         N[i/LINES][i%LINES] = M[i/LINES][i%LINES] - avgM;
     }
