@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
 
         #pragma omp barrier
 
+        partial_sum = 0;
         #pragma omp for
         for(i=0; i<N; i++) {
             partial_sum += a[i];
