@@ -1,13 +1,13 @@
 package it.pietrodn.mw.msgbatcher;
 
 public class Message {
-	
+
 	private int id;
-	
+
 	public Message(int id) {
 		this.id = id;
 	}
-	
+
 	public synchronized void send() {
 		try {
 			wait(1000);
@@ -16,5 +16,10 @@ public class Message {
 			e.printStackTrace();
 		}
 		System.out.println("Message " + this.id + " sent.");
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Message %d", id);
 	}
 }

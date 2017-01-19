@@ -1,5 +1,6 @@
 package it.pietrodn.mw.msgbatcher;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -28,26 +29,72 @@ public class MsgBatcher {
 			}
 		}
 		queue.add(m);
-		notifyAll();
+		System.out.println(m + " in queue.");
 	}
 
-	public void sendAll() {
-		synchronized (sender) {
-			sender.notify();
-		}
+	public synchronized void sendAll() {
+		System.out.println("sendAll()");
+		sender.addToSendQueue(queue);
+		queue.clear();
+		notifyAll();
 	}
 
 	public static void main(String[] args) {
 		MsgBatcher mb = new MsgBatcher(3);
-		mb.enqueue(new Message(1));
-		mb.enqueue(new Message(2));
-		mb.enqueue(new Message(3));
-		System.out.println("No message sent");
-		mb.sendAll();
+
+		new Thread() {
+			@Override
+			public void run() {
+				mb.enqueue(new Message(1));
+				mb.enqueue(new Message(2));
+				mb.sendAll();
+				mb.enqueue(new Message(3));
+			}
+		}.start();
+
+		new Thread() {
+			@Override
+			public void run() {
+				mb.enqueue(new Message(4));
+				mb.sendAll();
+				mb.enqueue(new Message(5));
+				mb.enqueue(new Message(6));
+			}
+		}.start();
+
+		new Thread() {
+			@Override
+			public void run() {
+				synchronized (this) {
+					try {
+						wait(1000);
+						mb.sendAll();
+						wait(6000);
+						mb.sendAll();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();
 	}
 
 	class SenderThread implements Runnable {
+
+		// Messages to be sent
+		private Queue<Message> sendQueue;
+
+		public synchronized void addToSendQueue(Collection<Message> messages) {
+			sendQueue.addAll(messages);
+			notify();
+		}
+
+		@Override
 		public void run() {
+
+			sendQueue = new LinkedList<Message>();
+
 			while (true) {
 				synchronized (this) {
 					try {
@@ -56,11 +103,9 @@ public class MsgBatcher {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
-				synchronized (MsgBatcher.this) {
-					while (!queue.isEmpty()) {
-						queue.remove().send();
-						MsgBatcher.this.notify();
+
+					while (!sendQueue.isEmpty()) {
+						sendQueue.remove().send();
 					}
 				}
 			}
