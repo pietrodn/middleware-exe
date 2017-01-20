@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
     } else { // Rank is not 0
 
         // We divide the cycle among the different MPI processes.
-        // I/O is automatically redirected.
         // We skip by "chunk" steps to make the processing load more homogeneous.
         long int count = 0;
         for(i=rank; i<=last; i+=size) {
