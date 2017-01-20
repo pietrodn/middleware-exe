@@ -1,6 +1,6 @@
 CXX = mpicxx
 CXXFLAGS = -O3 -Wall
-TARGETS = helloworld primes
+TARGETS = helloworld primes primes2
 
 .PHONY: all clean
 
