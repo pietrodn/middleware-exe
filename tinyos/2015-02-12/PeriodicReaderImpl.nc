@@ -13,7 +13,7 @@ module PeriodicReader {
         }
 
         event void Timer.fired() {
-            Sensor.read();
+            call Sensor.read();
         }
 
         event void Sensor.readDone(error_t err, uint16_t val) {
