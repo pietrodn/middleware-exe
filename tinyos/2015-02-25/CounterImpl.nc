@@ -14,6 +14,7 @@ module CounterImpl {
             if(count % 10 == 0) {
                 signal totalMessages(count);
             }
+            return msg;
         }
 
         command void reset() {

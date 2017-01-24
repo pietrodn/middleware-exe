@@ -25,7 +25,6 @@ module CounterImpl {
             count++;
             if(count == 100) {
                 signal getValue(count);
-                count = 0;
             }
         }
     }
