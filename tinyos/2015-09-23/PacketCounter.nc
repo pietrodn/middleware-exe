@@ -11,12 +11,21 @@ module PacketCounter {
         uint16_t numPackets = 0;
 
         event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) {
-            numPackets++;
+            atomic {
+                numPackets++;
+            }
+            return msg;
         }
 
         command error_t Read.read() {
-            signal readDone(SUCCESS, numPackets);
+            post readCount();
             return SUCCESS;
+        }
+
+        task void readCount() {
+            atomic {
+                signal readDone(SUCCESS, numPackets);
+            }
         }
 
         command error_t Init.init() {
@@ -25,7 +34,9 @@ module PacketCounter {
         }
 
         event void Timer.fired() {
-            numPackets = 0;
+            atomic {
+                numPackets = 0;
+            }
         }
     }
 }
