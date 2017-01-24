@@ -12,6 +12,10 @@ module PeriodicReader {
             call Timer.startPeriodic(period);
         }
 
+        command void stop() {
+            call Timer.stop();
+        }
+
         event void Timer.fired() {
             call Sensor.read();
         }
