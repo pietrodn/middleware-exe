@@ -21,7 +21,7 @@ module MovingAvgTemp {
         float temps[60];
         uint8_t curr_sec;
 
-        task float computeAverage() {
+        task void computeAverage() {
             uint8_t i;
             float sum = 0;
             atomic { // correct?
