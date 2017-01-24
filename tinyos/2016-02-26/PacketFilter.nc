@@ -12,10 +12,13 @@ module PacketFilter {
 
         event message_t* Rx.receive(message_t* msg, void* payload, uint8_t len) {
             if(((char*)payload)[0] == 255) { // check the first byte
+                // should copy msg before passing it to the signal
+                // how to do it? malloc is not recommended
                 signal Tx.receive(msg, payload, len);
             } else {
                 dropped++;
             }
+            return msg;
         }
 
         command error_t read() {
