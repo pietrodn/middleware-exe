@@ -6,17 +6,35 @@ This is a collection of solutions of exercises taken from the exams of the *[Mid
 
 ## Contents
 
+### java-threads
+
+Contains small multithreaded Java projects.
+
+How to build: import into [Eclipse](https://eclipse.org/) and run as Java application.
+
+### mpi
+
+Contains sample exercises written using MPI.
+
+How to build: `make`
+
+How to run: `mpirun -np <number of processes> <program name and arguments>`
+
 ### pthread
 
 Contains multithreaded C code that uses the native *pthread library*.
 
 How to build: `make`
 
-### java-threads
+### tinyos
 
-Contains small multithreaded Java projects.
+Sample exercises with TinyOS. Not tested, probably they don't even compile.
 
-How to build: import into [Eclipse](https://eclipse.org/) and run as Java application.
+### webservices
+
+Sample exercises with SOAP and REST.
+
+How to build: they're Eclipse projects. See also the README inside.
 
 ## License
 
