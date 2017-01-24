@@ -12,6 +12,16 @@ Contains small multithreaded Java projects.
 
 How to build: import into [Eclipse](https://eclipse.org/) and run as Java application.
 
+### openmp
+
+Exercises from the exams with OpenMP.
+
+How to build: `make`
+
+How to run:
+
+    OMP_NUM_THREADS=<numthreads> ./program_name <arguments>
+
 ### mpi
 
 Contains sample exercises written using MPI.
